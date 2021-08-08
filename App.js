@@ -1,13 +1,42 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text, View, SafeAreaView, FlatList, ActivityIndicator, Image} from 'react-native';
 
-export default function App() {
+const dataURL = "https://raw.githubusercontent.com/RyanHemrick/star_wars_movie_app/master/movies.json";
+const imgURL = "https://raw.githubusercontent.com/RyanHemrick/star_wars_movie_app/master/public/images/";
+
+const App = () => {
+
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch(dataURL)
+        .then((response) => response.json())
+        .then((json) => setData(json.movies))
+        .catch((error) => alert(error))
+        .finally(setLoading(false));
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>First native app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      {isLoading ? <ActivityIndicator /> : <FlatList
+          data={data}
+          keyExtractor={(item, index) => item.episode_number}
+          renderItem={({item}) => {
+            return(
+                <View style={styles.container}>
+                  <Text>
+                    Title: {item.title}
+                  </Text>
+                  <Text>
+                    Number of episode: {item.episode_number}
+                  </Text>
+                  <Image source={{uri: imgURL+item.poster}} style={styles.logo}/>
+                </View>
+            )}}
+      />}
+    </SafeAreaView>
   );
 }
 
@@ -18,4 +47,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  logo: {
+    width: 75,
+    height: 75
+  }
 });
+
+export default App;
+
