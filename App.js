@@ -12,12 +12,12 @@ const App = () => {
   const [ direction, setDirection ] = useState(null)
 
   useEffect(() => {
-    fetch(dataURL)
-        .then((response) => response.json())
-        .then((json) => setData(json.movies))
-        .catch((error) => alert(error))
-        .finally(setLoading(false));
-  });
+      fetch(dataURL)
+          .then((response) => response.json())
+          .then((json) => setData(json.movies))
+          .catch((error) => alert(error))
+          .finally(setLoading(false));
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -48,7 +48,6 @@ const App = () => {
     let sortedData = _.orderBy(data, ['episode_number'],[newDirection])
     setDirection(newDirection)
     setData(sortedData)
-    console.log(sortedData) /*Vypis serazenych prvku podle epizod*/
   }
 }
 
