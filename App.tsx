@@ -5,25 +5,31 @@ import _ from "lodash"
 const dataURL = "https://raw.githubusercontent.com/RyanHemrick/star_wars_movie_app/master/movies.json";
 const imgURL = "https://raw.githubusercontent.com/RyanHemrick/star_wars_movie_app/master/public/images/";
 
+type Movie = {
+  episode_number: string,
+  title: string,
+  poster: string
+}
+
 const App = () => {
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [ direction, setDirection ] = useState(null)
+  const [ direction, setDirection ] = useState("asc");
 
   useEffect(() => {
       fetch(dataURL)
           .then((response) => response.json())
           .then((json) => setData(json.movies))
           .catch((error) => alert(error))
-          .finally(setLoading(false));
+          .finally(() => setLoading(false));
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      {isLoading ? <ActivityIndicator size="large" animating /> : <FlatList
+      {isLoading ? <ActivityIndicator size="large" animating /> : <FlatList<Movie>
           data={data}
-          keyExtractor={(item, index) => item.episode_number}
+          keyExtractor={(item) => item.episode_number}
           extraData={data}
           renderItem={({item}) => {
             return(
