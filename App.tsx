@@ -6,16 +6,24 @@ const dataURL = "https://raw.githubusercontent.com/RyanHemrick/star_wars_movie_a
 const imgURL = "https://raw.githubusercontent.com/RyanHemrick/star_wars_movie_app/master/public/images/";
 
 type Movie = {
-  episode_number: string,
   title: string,
-  poster: string
+  episode_number: string,
+  main_characters: string[],
+  description: string,
+  poster: string,
+  hero_image: string
+}
+
+enum Direction {
+  Ascend = "asc",
+  Descend = "desc"
 }
 
 const App = () => {
 
   const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [ direction, setDirection ] = useState("asc");
+  const [data, setData] = useState<Movie[]>([]);
+  const [ direction, setDirection ] = useState(Direction.Ascend);
 
   useEffect(() => {
       fetch(dataURL)
@@ -50,7 +58,7 @@ const App = () => {
   );
 
   function sortListByEpisodes () {
-    const newDirection = direction === "desc" ? "asc" : "desc"
+    const newDirection = direction === Direction.Descend ? Direction.Ascend : Direction.Descend
     let sortedData = _.orderBy(data, ['episode_number'],[newDirection])
     setDirection(newDirection)
     setData(sortedData)
